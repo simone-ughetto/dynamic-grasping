@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="red_cylinder">
+  <!-- Cylinder properties -->
+  <xacro:property name="radius" value="0.015" />  <!-- 1.5cm radius -->
+  <xacro:property name="height" value="0.05" />   <!-- 5cm height -->
+  <xacro:property name="mass" value="0.030" />    <!-- 30g mass -->
+  
+  <!-- Define robot_name property -->
+  <xacro:arg name="robot_name" default="red_cylinder"/>
+  <xacro:property name="robot_name" value="$(arg robot_name)"/>
+  
+  <!-- Add world link definition -->
+  <link name="world"/>
+  
+  <!-- Cylinder link -->
+  <link name="red_cylinder_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${radius}" length="${height}"/>
+      </geometry>
+      <material name="red">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${radius}" length="${height}"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${mass}"/>
+      <!-- Inertia for a cylinder -->
+      <inertia 
+        ixx="${(mass/12) * (3*radius*radius + height*height)}" ixy="0.0" ixz="0.0"
+        iyy="${(mass/12) * (3*radius*radius + height*height)}" iyz="0.0" 
+        izz="${(mass/2) * (radius*radius)}"/>
+    </inertial>
+  </link>
+
+  <!-- Virtual floating joint to track cylinder position -->
+  <joint name="cylinder_world_joint" type="floating">
+    <parent link="world"/>
+    <child link="red_cylinder_link"/>
+  </joint>
+
+  <!-- Gazebo color -->
+  <gazebo reference="red_cylinder_link">
+    <material>Gazebo/Red</material>
+    <auto_disable>false</auto_disable>
+  </gazebo>
+  
+  <!-- Modified P3D plugin with unique topic name -->
+  <gazebo>
+    <plugin name="gazebo_ros_p3d" filename="libgazebo_ros_p3d.so">
+      <always_on>true</always_on>
+      <ros>
+        <namespace>red_cylinder</namespace>
+        <remapping>odom:=pose</remapping>  <!-- Changed from pose to cylinder_pose -->
+      </ros>
+      <body_name>red_cylinder_link</body_name>
+      <frame_name>world</frame_name>
+      <update_rate>30.0</update_rate>
+    </plugin>
+  </gazebo>
+</robot>

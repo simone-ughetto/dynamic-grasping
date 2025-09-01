@@ -1,0 +1,11 @@
+joint_state_publisher:
+  ros__parameters:
+    publish_default_positions: true
+    joint_defaults:
+      waist: 0.0
+      shoulder: -1.80
+      elbow: 1.55
+      forearm_roll: 0.0
+      wrist_angle: 0.8
+      wrist_rotate: 0.0
+      gripper: 0.0

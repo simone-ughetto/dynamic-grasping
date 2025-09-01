@@ -1,0 +1,13 @@
+# Parameters for the velocity estimator nodes
+
+object_vel_estimator_node:
+  ros__parameters:
+    sigma_pos: 8.0e-4       # Position measurement noise stddev
+    sigma_accel: 1.0e-2     # Linear acceleration process noise stddev
+    sigma_ang_accel: 2.0e-2 # Angular acceleration process noise stddev
+
+robot_vel_estimator_node:
+  ros__parameters:
+    sigma_pos: 8.0e-4       # Position measurement noise stddev (can be different if needed)
+    sigma_accel: 1.0e-2     # Linear acceleration process noise stddev
+    sigma_ang_accel: 2.0e-2 # Angular acceleration process noise stddev

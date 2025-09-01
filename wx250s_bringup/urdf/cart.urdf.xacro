@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="mobile_cart">
+  <!-- Cart dimensions -->
+  <xacro:property name="chassis_length" value="0.15" />  <!-- 15cm length -->
+  <xacro:property name="chassis_width" value="0.12" />   <!-- 12cm width -->
+  <xacro:property name="chassis_height" value="0.02" />  <!-- 2cm height -->
+  <xacro:property name="chassis_mass" value="0.5" />     <!-- 500g chassis -->
+  
+  <!-- Drive wheel properties -->
+  <xacro:property name="wheel_radius" value="0.02" />    <!-- 2cm wheel radius -->
+  <xacro:property name="wheel_width" value="0.01" />     <!-- 1cm wheel width -->
+  <xacro:property name="wheel_mass" value="0.1" />       <!-- 100g per wheel -->
+  
+  <!-- Wheel positions -->
+  <xacro:property name="wheel_offset_x" value="${-chassis_length/2 + 0.01}" />  <!-- x offset from center (rear) -->
+  <xacro:property name="wheel_offset_y" value="${chassis_width/2 + wheel_width/2}" />  <!-- y offset from center -->
+  
+  <!-- Caster wheel properties - INCREASED SIZE -->
+  <xacro:property name="caster_radius" value="0.02" />   <!-- 2cm caster radius (doubled from original) -->
+  <xacro:property name="caster_mass" value="0.1" />      <!-- 100g for caster (increased for larger size) -->
+  <xacro:property name="caster_offset_x" value="${chassis_length/2 - 0.01}" /> <!-- Front center position -->
+
+  <!-- Define robot_name property -->
+  <xacro:arg name='robot_name' default='mobile_cart'/>
+  <xacro:property name="robot_name" value="$(arg robot_name)"/>
+  
+  <!-- Base Link (Chassis) -->
+  <link name="${robot_name}_base_link">
+    <visual>
+      <origin xyz="0 0 ${wheel_radius + chassis_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+      <material name="blue">
+        <color rgba="0 0.5 1 1"/>
+      </material>
+    </visual>
+    
+    <collision>
+      <origin xyz="0 0 ${wheel_radius + chassis_height/2}" rpy="0 0 0"/>
+      <geometry>
+        <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+      </geometry>
+    </collision>
+    
+    <inertial>
+      <origin xyz="0 0 ${wheel_radius + chassis_height/2}" rpy="0 0 0"/>
+      <mass value="${chassis_mass}"/>
+      <inertia 
+        ixx="${chassis_mass * (chassis_width*chassis_width + chassis_height*chassis_height) / 12.0}" 
+        ixy="0.0" ixz="0.0"
+        iyy="${chassis_mass * (chassis_length*chassis_length + chassis_height*chassis_height) / 12.0}" 
+        iyz="0.0"
+        izz="${chassis_mass * (chassis_length*chassis_length + chassis_width*chassis_width) / 12.0}"/>
+    </inertial>
+  </link>
+  
+  <!-- Gazebo color for chassis -->
+  <gazebo reference="${robot_name}_base_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <!-- Drive Wheel Macro -->
+  <xacro:macro name="wheel" params="prefix x y">
+    <link name="${prefix}_wheel">
+      <visual>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+        </geometry>
+        <material name="black">
+          <color rgba="0.1 0.1 0.1 1"/>
+        </material>
+      </visual>
+      
+      <collision>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <geometry>
+          <cylinder length="${wheel_width}" radius="${wheel_radius}"/>
+        </geometry>
+      </collision>
+      
+      <inertial>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+        <mass value="${wheel_mass}"/>
+        <inertia 
+          ixx="${wheel_mass * (3*wheel_radius*wheel_radius + wheel_width*wheel_width) / 12.0}" 
+          ixy="0.0" ixz="0.0"
+          iyy="${wheel_mass * (3*wheel_radius*wheel_radius + wheel_width*wheel_width) / 12.0}" 
+          iyz="0.0"
+          izz="${wheel_mass * wheel_radius*wheel_radius / 2.0}"/>
+      </inertial>
+    </link>
+    
+    <joint name="${prefix}_wheel_joint" type="continuous">
+      <parent link="${robot_name}_base_link"/>
+      <child link="${prefix}_wheel"/>
+      <origin xyz="${x} ${y} ${wheel_radius}" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <dynamics damping="0.1" friction="0.1"/>
+    </joint>
+    
+    <!-- Gazebo specifics for wheel -->
+    <gazebo reference="${prefix}_wheel">
+      <material>Gazebo/Black</material>
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
+      <kp>1000000.0</kp>
+      <kd>100.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>1.0</maxVel>
+    </gazebo>
+  </xacro:macro>
+  
+  <!-- Create rear drive wheels -->
+  <xacro:wheel prefix="rear_right" x="${wheel_offset_x}" y="-${wheel_offset_y}"/>
+  <xacro:wheel prefix="rear_left" x="${wheel_offset_x}" y="${wheel_offset_y}"/>
+  
+  <!-- Front Caster Wheel - LARGER SIZE -->
+  <link name="caster_wheel">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="${caster_radius}"/>
+      </geometry>
+      <material name="dark_grey">
+        <color rgba="0.3 0.3 0.3 1"/>
+      </material>
+    </visual>
+    
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="${caster_radius}"/>
+      </geometry>
+    </collision>
+    
+    <inertial>
+      <mass value="${caster_mass}"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia
+        ixx="${2.0*caster_mass*caster_radius*caster_radius/5.0}" 
+        ixy="0.0" 
+        ixz="0.0"
+        iyy="${2.0*caster_mass*caster_radius*caster_radius/5.0}" 
+        iyz="0.0"
+        izz="${2.0*caster_mass*caster_radius*caster_radius/5.0}"/>
+    </inertial>
+  </link>
+  
+  <!-- Caster Joint - Fixed joint to the chassis -->
+  <joint name="caster_wheel_joint" type="fixed">
+    <parent link="${robot_name}_base_link"/>
+    <child link="caster_wheel"/>
+    <origin xyz="${caster_offset_x} 0 ${caster_radius}" rpy="0 0 0"/>
+  </joint>
+  
+  <!-- Gazebo specifics for caster -->
+  <gazebo reference="caster_wheel">
+    <material>Gazebo/Gray</material>
+    <mu1>0.1</mu1>
+    <mu2>0.1</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>1.0</maxVel>
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  
+  <!-- Gazebo plugin for differential drive -->
+  <gazebo>
+    <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+      <update_rate>50</update_rate>
+      <!-- Use rear wheels for differential drive -->
+      <left_joint>rear_left_wheel_joint</left_joint>
+      <right_joint>rear_right_wheel_joint</right_joint>
+      <wheel_separation>${chassis_width + 2*wheel_width}</wheel_separation>
+      <wheel_diameter>${2 * wheel_radius}</wheel_diameter>
+      <!-- Increase power to overcome initial friction -->
+      <max_wheel_acceleration>10.0</max_wheel_acceleration>
+      <max_wheel_torque>100</max_wheel_torque>
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>${robot_name}_base_link</robot_base_frame>
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <publish_wheel_tf>false</publish_wheel_tf>
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <robotBaseFrame>${robot_name}_base_link</robotBaseFrame>
+      <ros>
+        <namespace>/mobile_cart</namespace>
+      </ros>
+      <legacyMode>false</legacyMode>
+      <wheelAcceleration>5.0</wheelAcceleration>
+    </plugin>
+  </gazebo>
+</robot>

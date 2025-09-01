@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>dynamic_grasping_controller</name>
+  <version>0.0.1</version>
+  <description>Dynamic grasping controller package (renamed from widowx_controller)</description>
+  <maintainer email="simo.ughettto@gmail.com">Simone Ughetto</maintainer>
+  <license>TODO: License declaration</license>
+
+  <!-- Build tools -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+  <buildtool_depend>eigen3_cmake_module</buildtool_depend>
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+
+  <!-- Dependencies needed for both build and execution -->
+  <depend>rclcpp</depend>
+  <depend>rclcpp_action</depend> 
+  <depend>rclcpp_components</depend>
+  <depend>geometry_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>trajectory_msgs</depend> 
+  <depend>control_msgs</depend>     
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
+  <depend>interbotix_xs_msgs</depend>
+  <depend>eigen</depend>
+  <depend>moveit_ros_planning_interface</depend>
+  <depend>wx250s_bringup</depend>
+  <depend>linkattacher_msgs</depend>
+  <depend>gazebo_msgs</depend>
+  <depend>ament_index_cpp</depend>
+  <depend>gazebo_ros</depend>
+
+  <!-- Runtime dependencies -->
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>interbotix_xsarm_control</exec_depend>
+  <exec_depend>interbotix_xs_ros_control</exec_depend>
+
+  <!-- Test dependencies -->
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

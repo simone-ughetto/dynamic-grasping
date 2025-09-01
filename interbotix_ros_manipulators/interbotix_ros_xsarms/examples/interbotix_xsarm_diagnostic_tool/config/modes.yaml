@@ -1,0 +1,16 @@
+groups:
+  arm:
+    operating_mode: position
+    profile_type: velocity
+    profile_velocity: 131
+    profile_acceleration: 25
+    trajectory_delay_ms: 5  # Separate delay for trajectory execution
+    torque_enable: true
+
+singles:
+  gripper:
+    operating_mode: linear_position
+    profile_type: velocity
+    profile_velocity: 131
+    profile_acceleration: 25
+    torque_enable: true

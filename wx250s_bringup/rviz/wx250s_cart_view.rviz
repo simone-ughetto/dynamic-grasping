@@ -1,0 +1,81 @@
+Panels:
+- Class: rviz_common/Displays
+  Name: Displays
+  Property Tree Widget:
+    Expanded: ~
+    Splitter Ratio: 0.617647
+  Tree Height: 503
+- Class: interbotix_xs_rviz/Interbotix Control Panel
+  Name: Interbotix Control Panel
+  RobotNameSpace: ""
+Visualization Manager:
+  Global Options:
+    Fixed Frame: world   # Changed from "map" to "world"
+    Background Color: 0;176;240
+    Frame Rate: 30
+  Displays:
+    - Name: Grid
+      Class: rviz_default_plugins/Grid
+      Enabled: true
+      Cell Size: 0.25
+      Color: 255;255;255
+      Line Style:
+        Value: Lines
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 10
+      Reference Frame: <Fixed Frame>
+    - Name: RobotModel
+      Class: rviz_default_plugins/RobotModel
+      Enabled: true
+      Collision Enabled: false
+      Description Topic:
+        Value: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Visual Enabled: true
+    - Name: CartModel
+      Class: rviz_default_plugins/RobotModel
+      Enabled: true
+      Collision Enabled: false
+      Description Topic:
+        Value: mobile_cart/robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Visual Enabled: true
+    - Name: CylinderModel
+      Class: rviz_default_plugins/RobotModel
+      Enabled: true
+      Collision Enabled: false
+      Description Topic:
+        Value: cylinder/robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Visual Enabled: true
+    - Name: TF
+      Class: rviz_default_plugins/TF
+      Enabled: true
+      Frame Timeout: 15
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Distance: 1.5
+      Focal Point:
+        X: 0.2
+        Y: -0.3
+        Z: 0.1
+      Pitch: 0.5
+      Yaw: 0.8
+    Saved: ~
+Window Geometry:
+  Height: 923
+  Width: 1544
+  X: 72
+  Y: 27

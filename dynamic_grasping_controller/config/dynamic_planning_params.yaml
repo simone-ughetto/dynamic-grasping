@@ -1,0 +1,69 @@
+# Configuration parameters for the WidowX-250s robot dynamic trajectory planning and execution.
+
+robot:
+  ros__parameters:
+    namespace: "wx250s"  # ROS namespace for the robot
+    joint_names: ["waist", "shoulder", "elbow", "forearm_roll", "wrist_angle", "wrist_rotate"]  # Names of robot joints
+
+trajectory_planner_node:
+  ros__parameters:
+    # Motion planning parameters
+    dt: 0.05  # Time step (s) for trajectory sampling
+    max_velocity: 0.35  # Maximum linear velocity for trajectory planning (m/s)
+    max_acceleration: 0.4  # Maximum linear acceleration for trajectory planning (m/s²)
+    max_jerk: 1e4  # Maximum linear jerk for trajectory planning (m/s³)
+    max_angular_velocity: 3.5  # Maximum angular velocity for trajectory planning (rad/s)
+    max_angular_acceleration: 3.0  # Maximum angular acceleration for trajectory planning (rad/s²)
+    max_angular_jerk: 1e4  # Maximum angular jerk for trajectory planning (rad/s³)
+    
+    # Logging parameters
+    enable_trajectory_logging: false  # Whether to log trajectory data
+    trajectory_log_path: "/home/sughetto/my_robot_ws/trajectory_data.csv"  # File path for trajectory log data
+    log_cartesian_trajectory: false  # Whether to log Cartesian trajectory
+    
+    # Motion control parameters
+    stationary_velocity_threshold: 0.01  # 🟡 (0.01 for HW tests, 0.001 or < for simulation) Velocity threshold below which the object is considered stationary
+    approach_offset: 0.07 # 🟡 Z-axis offset for the approach phase
+    basic_offset: 0.01  # 🟡 Basic offset for trajectory planning
+    approach_velocity: 0.00  # 🟡 Approach velocity (m/s): how fast the EE moves downwards right when above the object
+    t2_duration: 1.2  # 🟡 Duration of the second trajectory phase
+    t3_duration: 1.2  # Duration of the third trajectory phase
+    include_velocity: true  # Whether to include velocity in trajectory points
+    predict_ahead: true  # 🔴 Whether to predict slightly ahead (0.1s) of the target position
+    prediction_offset: 0.1  # 🔴 Time offset for ahead prediction (seconds)
+    
+    # Visualization
+    show_prediction_marker: false  # Whether to show prediction markers in Gazebo
+    grasp_marker_xacro: "/home/sughetto/my_robot_ws/src/wx250s_bringup/urdf/visual_cylinder.urdf.xacro"  # Path to grasp marker model
+    
+    # Default robot pose
+    default_pose:
+      position:
+        x: 0.17426583392377312  # X coordinate (m)
+        y: 0.0  # Y coordinate (m)
+        z: 0.17140146946111207  # Z coordinate (m)
+      orientation:
+        x: 0.0  # X component of quaternion
+        y: 0.247416824956803  # Y component of quaternion
+        z: 0.0  # Z component of quaternion
+        w: 0.9689091363993442  # W component of quaternion
+
+gripper_planner_node:
+  ros__parameters:
+    preset:
+      grasping: 0.015  # Finger position for grasping (m)
+      released: 0.037  # Finger position for released (m)
+      home: 0.0195  # Finger position for home position (m)
+    max_width: 0.053  # Maximum gripper width (m)
+
+dynamic_grasping_manager_node:
+  ros__parameters:
+    basic_offset: 0.01  # 🟡 Basic offset for trajectory planning
+    object_name: "red_cylinder"  # 🔴 Name of the object to track
+    monitoring_rate: 50.0  # Rate at which to monitor the system (Hz)
+    inner_radius: 0.08  # Minimum distance from robot base (m)
+    stabilization_samples: 6  # Number of samples to check for stabilization
+    velocity_diff_threshold: 0.01  # 🔴 (typically 0.01 HW tests, 0.001 simulation) Threshold for detecting velocity changes
+    gripper_close_value: "0.03"  # 🔴 Command value to close the gripper
+    max_velocity: 0.35  # Maximum linear velocity for trajectory planning (m/s)
+    max_acceleration: 0.4  # Maximum linear acceleration for trajectory planning (m/s²)

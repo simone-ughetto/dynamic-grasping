@@ -1,0 +1,6 @@
+example_device_1:
+  ros__parameters:
+    topics:
+      - system1
+      - system1/sensor1
+      - system1/sensor2

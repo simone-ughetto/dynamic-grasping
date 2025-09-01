@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="visual_cylinder">
+
+  <!-- parameters -->
+  <xacro:property name="radius"  value="0.015"/>
+  <xacro:property name="height"  value="0.05"/>
+  <xacro:arg       name="robot_name" default="visual_cylinder"/>
+
+  <!-- single root link -->
+  <link name="visual_cylinder_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="${radius}" length="${height}"/>
+      </geometry>
+      <material name="TransparentRed">
+        <color rgba="1 0 0 0.2"/>
+      </material>
+    </visual>
+
+    <!-- Minimal inertia values -->
+    <inertial>
+      <mass value="0.00001"/>
+      <inertia ixx="1e-8" iyy="1e-8" izz="1e-8" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <!-- Gazebo tag for ghost-like properties -->
+  <gazebo reference="visual_cylinder_link">
+    <material>Gazebo/RedTransparent</material>
+    <transparency>0.9</transparency>
+    <static>true</static>
+    <gravity>false</gravity>
+    <selfCollide>false</selfCollide>
+    <!-- Disable collisions with other objects -->
+    <collision>
+      <max_contacts>0</max_contacts>
+    </collision>
+    <!-- Make ghost-like -->
+    <ghost>true</ghost>
+  </gazebo>
+
+</robot>

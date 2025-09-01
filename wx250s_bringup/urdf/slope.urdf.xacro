@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="slope_from_mesh">
+
+  <!-- ─────── parameters ─────── -->
+  <xacro:property name="slope_mass"        value="5.0"/>
+  <xacro:property name="mesh_path"
+                  value="file:///home/sughetto/my_robot_ws/src/wx250s_bringup/meshes/wedge_3m_0.2m_7pct.stl"/>
+  <xacro:property name="mesh_length_y_axis" value="3.0"/>
+  <xacro:property name="mesh_width_x_axis"  value="0.2"/>
+  <xacro:property name="mesh_height_z_max"  value="0.50"/>
+
+  <!-- ─────── material *for RViz* ─────── -->
+  <!-- ▶ NEW : only <color> is valid here -->
+  <material name="slope_brown">
+    <color rgba="0.40 0.22 0.12 1.0"/>
+  </material>
+
+  <link name="slope_base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="${mesh_path}" scale="1 1 1"/>
+      </geometry>
+      <!-- ▶ MOD -->
+      <material name="slope_brown"/>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="${mesh_path}" scale="1 1 1"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <origin xyz="0 ${mesh_length_y_axis/3} ${mesh_height_z_max/3}" rpy="0 0 0"/>
+      <mass value="${slope_mass}"/>
+      <xacro:property name="H_avg" value="${mesh_height_z_max / 2.0}"/>
+      <xacro:property name="Ixx_approx"
+                      value="${slope_mass/12 * (mesh_width_x_axis*mesh_width_x_axis + H_avg*H_avg)}"/>
+      <xacro:property name="Iyy_approx"
+                      value="${slope_mass/12 * (mesh_length_y_axis*mesh_length_y_axis + H_avg*H_avg)}"/>
+      <xacro:property name="Izz_approx"
+                      value="${slope_mass/12 * (mesh_length_y_axis*mesh_length_y_axis + mesh_width_x_axis*mesh_width_x_axis)}"/>
+      <inertia ixx="${Ixx_approx}" ixy="0" ixz="0"
+               iyy="${Iyy_approx}" iyz="0"
+               izz="${Izz_approx}"/>
+    </inertial>
+  </link>
+
+  <!-- ─────── Gazebo extensions ─────── -->
+  <gazebo reference="slope_base_link">
+    <static>true</static>
+    <mu1>0.8</mu1>
+    <mu2>0.7</mu2>
+    <kp>1e6</kp>
+    <kd>100.0</kd>
+
+    <!-- ▶ MOD : use built-in wood material (nice specular rim) -->
+    <material>Gazebo/Wood</material>
+  </gazebo>
+
+</robot>

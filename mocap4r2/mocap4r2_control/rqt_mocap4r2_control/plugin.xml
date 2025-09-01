@@ -1,0 +1,17 @@
+<library path="rqt_mocap4r2_control">
+  <class name="rqt_mocap4r2_control/MocapControl" type="rqt_mocap4r2_control::MocapControl" base_class_type="rqt_gui_cpp::Plugin">
+    <description>
+      A GUI plugin to control Mocap systems
+    </description>
+    <qtgui>
+      <group>
+        <label>MOCAP4ROS2</label>
+        <icon type="theme">applications-accesories</icon>
+        <statustip>MOCAP4ROS2 Plugins.</statustip>
+      </group>
+      <label>Mocap Control</label>
+      <icon type="theme">utilities-system-monitor</icon>
+      <statustip>A GUI plugin for viewing sensor_msgs/Image topics.</statustip>
+    </qtgui>
+  </class>
+</library>
