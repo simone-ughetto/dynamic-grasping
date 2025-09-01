@@ -33,7 +33,7 @@ Simulations use Gazebo Classic to run and test the system. Before running, verif
 
 For hardware tests you must provide a source of real-time object and robot arm pose information. This setup uses the packages subscribes to topic into which pose data from a Motion Capture system are streamed, processed by other ROS 2 packages (like those from [Optitrack MoCap4ROS2 Setup GitHub](https://github.com/OptiTrack/mocap4ros2_optitrack)). The dynamic grasping system reads these poses to predict motion and plan the intercept.
 - Make sure the mocap topic/frame and `object_name` in `config/dynamic_planning_params.yaml` are consistent.
-- Make sure to connect the device that is running these packages to the same network of the computer processing MoCap data.
+- Make sure to connect the device that is running these packages to the same network of the computer processing MoCap data and save the device's IP address in the field `local_address` of the file `/mocap4ros2_optitrack/mocap4r2_optitrack_driver/config/mocap4r2_optitrack_driver_params.yaml`.
 - Configure the OptiTrack system with the correct rigid body names matching your `object_name` parameter.
 - To run hardware tests, connect the robot arm WidowX 250 S and launch the file: `ros2 launch dynamic_grasping_controller hardware_grasping.launch.py`.
 - Make sure `predict_ahead` is set to `true` if the grasp fails because the robot is laggy.
