@@ -25,8 +25,14 @@ The main configuration file for planning and runtime parameters is `config/dynam
 ## Simulation
 
 Simulations use Gazebo Classic to run and test the system. Before running, verify that `object_name` and the object pose publisher used by the simulated world publish the same frame/namespace.
-- For a simple simulation with a cart and a red cylinder on top of it (stationary arm), launch the file: `ros2 launch dynamic_grasping_controller cart_cylinder_sim.launch.py`.
-- For a simulation with an additional slope (fixed), launch: `ros2 launch dynamic_grasping_controller cart_cylinder_slope_sim.launch.py`.
+- For a simple simulation with a cart and a red cylinder on top of it (stationary arm), launch the file: 
+```
+ros2 launch dynamic_grasping_controller cart_cylinder_sim.launch.py
+```
+- For a simulation with an additional slope (fixed), launch: 
+```
+ros2 launch dynamic_grasping_controller cart_cylinder_slope_sim.launch.py`
+```
 - When in simulation, remember to set the parameter `predict_ahead` to `false`!
 
 ## Hardware tests
@@ -35,8 +41,15 @@ For hardware tests you must provide a source of real-time object and robot arm p
 - Make sure the mocap topic/frame and `object_name` in `config/dynamic_planning_params.yaml` are consistent.
 - Make sure to connect the device that is running these packages to the same network of the computer processing MoCap data and save the device's IP address in the field `local_address` of the file `/mocap4ros2_optitrack/mocap4r2_optitrack_driver/config/mocap4r2_optitrack_driver_params.yaml`.
 - Configure the OptiTrack system with the correct rigid body names matching your `object_name` parameter.
-- To run hardware tests, connect the robot arm WidowX 250 S and launch the file: `ros2 launch dynamic_grasping_controller hardware_grasping.launch.py`.
+- To run hardware tests, connect the robot arm WidowX 250 S and launch the file: 
+```
+ros2 launch dynamic_grasping_controller hardware_grasping.launch.py
+```
 - Make sure `predict_ahead` is set to `true` if the grasp fails because the robot is laggy.
+- After launching, wait for the robot to go to its "Rest" pose in 5 seconds before sending any command. Once the robot arm is launched and reached that pose, to make the control system start working (or just monitoring when far away from the object), send the following start command in a separate terminal tab/window:
+```
+ros2 topic pub -1 /start std_msgs/msg/Bool "data: true"
+```
 
 ## Dependencies and Installation
 
