@@ -23,14 +23,14 @@ trajectory_planner_node:
     
     # Motion control parameters
     stationary_velocity_threshold: 0.01  # 🟡 (0.01 for HW tests, 0.001 or < for simulation) Velocity threshold below which the object is considered stationary
-    approach_offset: 0.07 # 🟡 Z-axis offset for the approach phase
-    basic_offset: 0.01  # 🟡 Basic offset for trajectory planning
+    approach_offset: 0.07 # 🟡 Z-axis offset for the approach phase: distance between TCP and object center when right above the object
+    basic_offset: 0.01  # 🟡 Basic offset for trajectory planning: distance between TCP and object center when grasping it
     approach_velocity: 0.00  # 🟡 Approach velocity (m/s): how fast the EE moves downwards right when above the object
-    t2_duration: 1.2  # 🟡 Duration of the second trajectory phase
-    t3_duration: 1.2  # Duration of the third trajectory phase
+    t2_duration: 1.2  # 🟡 Duration of the second trajectory phase (from right above the object to around it, ready to grasp)
+    t3_duration: 1.2  # Duration of the third trajectory phase (cruise phase, around the object)
     include_velocity: true  # Whether to include velocity in trajectory points
-    predict_ahead: true  # 🔴 Whether to predict slightly ahead (0.1s) of the target position
-    prediction_offset: 0.1  # 🔴 Time offset for ahead prediction (seconds)
+    predict_ahead: true  # 🔴 Whether to predict slightly ahead of the target position (set to false when for Gazebo simulations)
+    prediction_offset: 0.1  # 🔴 Time offset for ahead prediction (seconds, typically 0.1s for HW tests)
     
     # Visualization
     show_prediction_marker: false  # Whether to show prediction markers in Gazebo
@@ -58,12 +58,12 @@ gripper_planner_node:
 
 dynamic_grasping_manager_node:
   ros__parameters:
-    basic_offset: 0.01  # 🟡 Basic offset for trajectory planning
-    object_name: "red_cylinder"  # 🔴 Name of the object to track
+    basic_offset: 0.01  # 🟡 Basic offset for trajectory planning: distance between TCP and object center when grasping it
+    object_name: "red_cylinder"  # 🔴 Exact name of the object to track
     monitoring_rate: 50.0  # Rate at which to monitor the system (Hz)
     inner_radius: 0.08  # Minimum distance from robot base (m)
     stabilization_samples: 6  # Number of samples to check for stabilization
     velocity_diff_threshold: 0.01  # 🔴 (typically 0.01 HW tests, 0.001 simulation) Threshold for detecting velocity changes
-    gripper_close_value: "0.03"  # 🔴 Command value to close the gripper
+    gripper_close_value: "0.03"  # 🔴 Gripper goal aperture (m): it should match the object's width or be smaller by 1 mm.
     max_velocity: 0.35  # Maximum linear velocity for trajectory planning (m/s)
     max_acceleration: 0.4  # Maximum linear acceleration for trajectory planning (m/s²)
