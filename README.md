@@ -6,7 +6,7 @@ This repository contains code and launch/configuration used to enable the robot 
 - Grasping stationary objects as well as objects that move with a constant linear velocity (including cases where the arm moves and the object is stationary relative to the base).
 - Online adaptation and replanning after a change in the object motion, provided the motion remains linear and constant and the replanning criteria are satisfied.
 
-## Packages included
+## Packages include
 
 - `dynamic_grasping_controller` — Implementation of the dynamic grasping control system, with custom trajectory planning, dynamic grasping manager (finite-state machine), custom kinematic functions library and other tools.
 - `wx250s_bringup` — Custom bringup package with various launch files, both for simulations in Gazebo and hardware tests.
